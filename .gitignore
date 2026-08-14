@@ -1,0 +1,6 @@
+# This GitHub repo is only the public Plaid branding pages.
+# The dashboard app stays on the home server and must not be published.
+*
+!docs/
+!docs/**
+!.gitignore
