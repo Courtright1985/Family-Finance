@@ -8,11 +8,11 @@
   const detailSection = document.getElementById("detail");
   const detailPanel = document.getElementById("detail-panel");
   const backBtn = document.getElementById("back-btn");
-  const filterBtns = [...document.querySelectorAll(".filter")];
-  const navFilters = [...document.querySelectorAll(".site-nav [data-filter]")];
+  const filterBtns = () => [...document.querySelectorAll(".filters .filter")];
 
   let activeFilter = "all";
   let query = "";
+  let currentEntryId = null;
 
   function escapeHtml(str) {
     return String(str)
@@ -24,6 +24,14 @@
 
   function categoryLabel(id) {
     return data.categories.find((c) => c.id === id)?.label || id;
+  }
+
+  function syncFilterButtons() {
+    filterBtns().forEach((btn) => {
+      const on = btn.dataset.filter === activeFilter;
+      btn.classList.toggle("is-active", on);
+      btn.setAttribute("aria-selected", on ? "true" : "false");
+    });
   }
 
   function filteredEntries() {
@@ -70,10 +78,20 @@
       .join("");
   }
 
-  function showDetail(id) {
+  function showBrowse() {
+    currentEntryId = null;
+    document.body.classList.remove("is-detail");
+    detailSection.hidden = true;
+    detailPanel.innerHTML = "";
+    syncFilterButtons();
+    renderList();
+  }
+
+  function showDetail(id, { historyMode = "push" } = {}) {
     const entry = data.entries.find((e) => e.id === id);
     if (!entry) return;
 
+    currentEntryId = id;
     document.body.classList.add("is-detail");
     detailSection.hidden = false;
     detailPanel.innerHTML = `
@@ -111,79 +129,87 @@
       </ol>
     `;
 
-    history.replaceState(null, "", `#entry/${entry.id}`);
+    const url = `#entry/${entry.id}`;
+    if (historyMode === "push") history.pushState({ view: "entry", id }, "", url);
+    else if (historyMode === "replace") history.replaceState({ view: "entry", id }, "", url);
+
     detailSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function hideDetail() {
-    document.body.classList.remove("is-detail");
-    detailSection.hidden = true;
-    detailPanel.innerHTML = "";
+  function hideDetail({ historyMode = "push" } = {}) {
+    showBrowse();
     const hash = activeFilter !== "all" ? `#browse/${activeFilter}` : "#browse";
-    history.replaceState(null, "", hash);
+    if (historyMode === "push") history.pushState({ view: "browse", filter: activeFilter }, "", hash);
+    else if (historyMode === "replace") {
+      history.replaceState({ view: "browse", filter: activeFilter }, "", hash);
+    }
   }
 
-  function setFilter(next) {
+  function setFilter(next, { historyMode = "push", scroll = true } = {}) {
     activeFilter = next;
-    filterBtns.forEach((btn) => {
-      const on = btn.dataset.filter === next;
-      btn.classList.toggle("is-active", on);
-      btn.setAttribute("aria-selected", on ? "true" : "false");
-    });
-    document.body.classList.remove("is-detail");
-    detailSection.hidden = true;
-    detailPanel.innerHTML = "";
-    renderList();
-    document.getElementById("browse")?.scrollIntoView({ behavior: "smooth" });
-    history.replaceState(null, "", next === "all" ? "#browse" : `#browse/${next}`);
+    showBrowse();
+    if (scroll) {
+      document.getElementById("browse")?.scrollIntoView({ behavior: "smooth" });
+    }
+    const hash = next === "all" ? "#browse" : `#browse/${next}`;
+    if (historyMode === "push") history.pushState({ view: "browse", filter: next }, "", hash);
+    else if (historyMode === "replace") {
+      history.replaceState({ view: "browse", filter: next }, "", hash);
+    }
   }
 
   function routeFromHash() {
     const hash = location.hash.replace(/^#/, "");
     if (hash.startsWith("entry/")) {
-      showDetail(hash.slice(6));
+      showDetail(hash.slice(6), { historyMode: "none" });
       return;
     }
     if (hash.startsWith("browse/")) {
       const cat = hash.slice(7);
       if (["joins", "hems", "finishes", "stitches", "all"].includes(cat)) {
         activeFilter = cat === "all" ? "all" : cat;
-        filterBtns.forEach((btn) => {
-          const on = btn.dataset.filter === activeFilter;
-          btn.classList.toggle("is-active", on);
-          btn.setAttribute("aria-selected", on ? "true" : "false");
-        });
       }
     }
-    document.body.classList.remove("is-detail");
-    detailSection.hidden = true;
-    renderList();
+    showBrowse();
   }
 
   listEl.addEventListener("click", (event) => {
     const row = event.target.closest(".entry-row");
     if (!row) return;
-    showDetail(row.dataset.id);
+    showDetail(row.dataset.id, { historyMode: "push" });
   });
 
-  filterBtns.forEach((btn) => {
-    btn.addEventListener("click", () => setFilter(btn.dataset.filter));
+  document.querySelector(".filters")?.addEventListener("click", (event) => {
+    const btn = event.target.closest(".filter");
+    if (!btn) return;
+    setFilter(btn.dataset.filter, { historyMode: "push" });
   });
 
-  navFilters.forEach((link) => {
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      setFilter(link.dataset.filter);
-    });
+  document.querySelector(".site-nav")?.addEventListener("click", (event) => {
+    const link = event.target.closest("[data-filter]");
+    if (!link) return;
+    event.preventDefault();
+    setFilter(link.dataset.filter, { historyMode: "push" });
   });
 
-  searchEl.addEventListener("input", () => {
+  function onSearch() {
     query = searchEl.value;
-    if (document.body.classList.contains("is-detail")) hideDetail();
-    renderList();
+    if (currentEntryId) hideDetail({ historyMode: "replace" });
+    else renderList();
+  }
+
+  searchEl.addEventListener("input", onSearch);
+  searchEl.addEventListener("search", onSearch);
+  searchEl.addEventListener("keyup", onSearch);
+
+  backBtn.addEventListener("click", (event) => {
+    event.preventDefault();
+    hideDetail({ historyMode: "push" });
+    document.getElementById("browse")?.scrollIntoView({ behavior: "smooth" });
   });
 
-  backBtn.addEventListener("click", hideDetail);
+  window.addEventListener("popstate", routeFromHash);
   window.addEventListener("hashchange", routeFromHash);
+
   routeFromHash();
 })();
