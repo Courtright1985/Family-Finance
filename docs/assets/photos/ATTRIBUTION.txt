@@ -1,0 +1,8 @@
+Photos and instructional plates for The Seam Book.
+
+machine.jpg / hero.jpg — Wikimedia Commons sewing-machine photograph
+  (see the Commons file page for photographer credit and license).
+
+Instructional plates (*-cover.jpg, *-{1,2,3}.jpg, hero-fabric.jpg) were
+generated programmatically for this encyclopedia to illustrate classic
+fabric joins and hems.

@@ -3,31 +3,102 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Family Finance</title>
+  <title>The Seam Book — Classic Fabric Joins</title>
+  <meta
+    name="description"
+    content="An encyclopedia of classic ways to join fabric, finish hems, and sew stitches — with photos and step-by-step instructions."
+  />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Outfit:wght@400;500&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Figtree:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main>
-    <p class="eyebrow">Household app</p>
-    <h1>Family Finance</h1>
-    <p class="lede">
-      A private dashboard for our family to view our own bank balances and recent
-      transactions. Bank connections are handled by Plaid. The app itself runs on
-      our home server and is not a public product.
-    </p>
-    <ul>
-      <li>We only connect accounts that belong to our household.</li>
-      <li>Login happens in Plaid Link, not on this website.</li>
-      <li>Balances and transactions stay on our home server.</li>
-    </ul>
-    <p class="links">
-      <a href="privacy.html">Privacy policy</a>
-      ·
-      <a href="https://plaid.com/legal/#end-user-privacy-policy">Plaid’s privacy policy</a>
-    </p>
+  <a class="skip-link" href="#browse">Skip to encyclopedia</a>
+
+  <header class="site-header">
+    <a class="brand-mark" href="#top">The Seam Book</a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#browse" data-filter="joins">Joins</a>
+      <a href="#browse" data-filter="hems">Hems</a>
+      <a href="#browse" data-filter="finishes">Finishes</a>
+      <a href="#browse" data-filter="stitches">Stitches</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-label="Introduction">
+      <div class="hero-visual">
+        <img
+          src="assets/photos/hero-fabric.jpg"
+          alt=""
+          width="1200"
+          height="800"
+          fetchpriority="high"
+        />
+        <div class="hero-veil" aria-hidden="true"></div>
+      </div>
+      <div class="hero-copy">
+        <p class="brand">The Seam Book</p>
+        <h1>Classic ways to join fabric.</h1>
+        <p class="lede">
+          Photos and instructions for seams, hems, and finishes — the techniques home sewists have used for generations.
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#browse">Browse techniques</a>
+          <a class="btn btn-ghost" href="#how">How to use this book</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="machine-note">
+      <div class="machine-note-inner">
+        <h2>How to use this book</h2>
+        <p>
+          Pick a category, open a technique, and follow the photo steps. Start with a plain seam and zigzag overcast if you are new; reach for French seams, flat-felled joins, and blind hems as projects ask for them.
+        </p>
+      </div>
+    </section>
+
+    <section id="browse" class="browse">
+      <div class="browse-head">
+        <h2>Encyclopedia</h2>
+        <p class="browse-lede">Filter by job, then open any entry for photos and instructions.</p>
+      </div>
+
+      <div class="filters" role="tablist" aria-label="Entry categories">
+        <button type="button" class="filter is-active" role="tab" aria-selected="true" data-filter="all">All</button>
+        <button type="button" class="filter" role="tab" aria-selected="false" data-filter="joins">Joins</button>
+        <button type="button" class="filter" role="tab" aria-selected="false" data-filter="hems">Hems</button>
+        <button type="button" class="filter" role="tab" aria-selected="false" data-filter="finishes">Finishes</button>
+        <button type="button" class="filter" role="tab" aria-selected="false" data-filter="stitches">Stitches</button>
+      </div>
+
+      <label class="search-wrap">
+        <span class="visually-hidden">Search entries</span>
+        <input type="search" id="search" placeholder="Search French seam, hem, overcast…" autocomplete="off" />
+      </label>
+
+      <p class="result-count" id="result-count" aria-live="polite"></p>
+      <div class="entry-list" id="entry-list"></div>
+    </section>
+
+    <section class="detail" id="detail" hidden>
+      <button type="button" class="back-link" id="back-btn">← Back to encyclopedia</button>
+      <article class="detail-panel" id="detail-panel"></article>
+    </section>
   </main>
+
+  <footer class="site-footer">
+    <p>
+      <strong>The Seam Book</strong> — classic fabric joins, hems, and stitches with photos and instructions.
+    </p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
