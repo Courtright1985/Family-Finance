@@ -1,6 +1,8 @@
-# This GitHub repo is only the public Plaid branding pages.
+# Public GitHub Pages site (Plaid branding only).
 # The dashboard app stays on the home server and must not be published.
 *
 !docs/
 !docs/**
+!tv-home/
+!tv-home/**
 !.gitignore
