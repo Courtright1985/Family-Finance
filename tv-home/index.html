@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920, height=1080" />
+  <title>Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/home.css" />
+</head>
+<body>
+  <div class="stage" aria-hidden="true">
+    <div class="wash"></div>
+    <div class="grain"></div>
+  </div>
+
+  <main class="home" id="home">
+    <header class="mast">
+      <div>
+        <p class="wordmark">Home</p>
+        <p class="tagline" id="tagline">Choose something to watch</p>
+      </div>
+      <div class="when">
+        <p class="clock" id="clock">--:--</p>
+        <p class="date" id="date">—</p>
+      </div>
+    </header>
+
+    <section class="rail" aria-label="Apps">
+      <div class="rail-track" id="apps" tabindex="0"></div>
+    </section>
+
+    <p class="hint" id="hint">Use the remote arrows · Press OK to open</p>
+  </main>
+
+  <script src="js/apps.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
